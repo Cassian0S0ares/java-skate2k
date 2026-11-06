@@ -1,0 +1,19 @@
+allprojects {
+    ext {
+        gdxVersion = '1.14.2'
+        junitVersion = '5.11.4'
+    }
+    repositories {
+        mavenCentral()
+    }
+}
+
+subprojects {
+    apply plugin: 'java'
+
+    // Compila para Java 17 com o JDK que estiver rodando o Gradle (17 ou superior).
+    tasks.withType(JavaCompile).configureEach {
+        options.encoding = 'UTF-8'
+        options.release = 17
+    }
+}

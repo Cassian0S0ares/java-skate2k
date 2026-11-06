@@ -1,0 +1,15 @@
+.gradle/
+build/
+core/build/
+desktop/build/
+bin/
+out/
+*.class
+*.log
+.idea/
+*.iml
+.vscode/
+.classpath
+.project
+.settings/
+captura/

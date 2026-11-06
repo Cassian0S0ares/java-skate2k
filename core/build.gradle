@@ -1,0 +1,18 @@
+plugins {
+    id 'java-library'
+}
+
+dependencies {
+    api "com.badlogicgames.gdx:gdx:$gdxVersion"
+
+    testImplementation "org.junit.jupiter:junit-jupiter:$junitVersion"
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+test {
+    useJUnitPlatform()
+    testLogging {
+        events 'failed'
+        showStandardStreams = true
+    }
+}

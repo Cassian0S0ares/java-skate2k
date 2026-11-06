@@ -1,0 +1,35 @@
+plugins {
+    id 'application'
+}
+
+application {
+    mainClass = 'com.skate2k.desktop.DesktopLauncher'
+    applicationDefaultJvmArgs = ['--enable-native-access=ALL-UNNAMED']
+}
+
+dependencies {
+    implementation project(':core')
+    implementation "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
+    implementation "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
+}
+
+run {
+    workingDir = rootProject.projectDir
+    // O GLFW no macOS exige a thread principal.
+    if (System.getProperty('os.name').toLowerCase().contains('mac')) {
+        jvmArgs '-XstartOnFirstThread'
+    }
+}
+
+// Gera um JAR unico executavel: gradlew desktop:dist
+tasks.register('dist', Jar) {
+    group = 'distribution'
+    description = 'Empacota o jogo em um JAR executavel.'
+    archiveFileName = 'skate2k.jar'
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    manifest { attributes 'Main-Class': application.mainClass.get() }
+    from sourceSets.main.output
+    dependsOn configurations.runtimeClasspath
+    from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
+    exclude 'META-INF/*.SF', 'META-INF/*.DSA', 'META-INF/*.RSA'
+}
