@@ -1,0 +1,86 @@
+[
+  {
+    "id": "salto_pouso",
+    "path": "C:\\Users\\Aluno\\.codex\\generated_images\\01a1b361-c479-7cd2-9b54-307a62a3c15c\\exec-dadcf780-6597-4e52-9413-651fc3130ab6.png",
+    "columns": 8,
+    "rows": 4
+  },
+  {
+    "id": "kickflip_ciclo",
+    "path": "C:\\Users\\Aluno\\.codex\\generated_images\\01a1b361-c479-7cd2-9b54-307a62a3c15c\\exec-e31e510a-cf81-49ff-b49f-63b99e4d3fbc.png",
+    "columns": 8,
+    "rows": 4
+  },
+  {
+    "id": "impossible_ciclo",
+    "path": "C:\\Users\\Aluno\\.codex\\generated_images\\01a1b361-c479-7cd2-9b54-307a62a3c15c\\exec-48937429-bf4b-4f65-b78e-c668330bd2a6.png",
+    "columns": 8,
+    "rows": 4
+  },
+  {
+    "id": "hardflip_ciclo",
+    "path": "C:\\Users\\Aluno\\.codex\\generated_images\\01a1b361-c479-7cd2-9b54-307a62a3c15c\\exec-24cd5a91-6050-4bc6-9086-c5f482ccd5e8.png",
+    "columns": 8,
+    "rows": 4
+  },
+  {
+    "id": "giro_8direcoes",
+    "path": "C:\\Users\\Aluno\\.codex\\generated_images\\01a1b361-c479-7cd2-9b54-307a62a3c15c\\exec-d14e59c9-81d6-4b39-89b8-d600201cd943.png",
+    "columns": 4,
+    "rows": 2
+  },
+  {
+    "id": "grab",
+    "path": "C:\\Users\\Aluno\\.codex\\generated_images\\01a1b361-c479-7cd2-9b54-307a62a3c15c\\exec-d1c1b47c-14b6-49f5-a00c-1f8c599d06b0.png",
+    "columns": 8,
+    "rows": 4
+  },
+  {
+    "id": "grind_5050",
+    "path": "C:\\Users\\Aluno\\.codex\\generated_images\\01a1b361-c479-7cd2-9b54-307a62a3c15c\\exec-0136c1b0-7508-40df-b26e-6dac669e3d40.png",
+    "columns": 8,
+    "rows": 4
+  },
+  {
+    "id": "boardslide",
+    "path": "C:\\Users\\Aluno\\.codex\\generated_images\\01a1b361-c479-7cd2-9b54-307a62a3c15c\\exec-9996204a-ebff-4ae6-8333-2776351097dd.png",
+    "columns": 8,
+    "rows": 4
+  },
+  {
+    "id": "gap_escada",
+    "path": "C:\\Users\\Aluno\\.codex\\generated_images\\01a1b361-c479-7cd2-9b54-307a62a3c15c\\exec-63589471-e320-4b25-a426-bd513c46b301.png",
+    "columns": 8,
+    "rows": 4
+  },
+  {
+    "id": "voo_longo",
+    "path": "C:\\Users\\Aluno\\.codex\\generated_images\\01a1b361-c479-7cd2-9b54-307a62a3c15c\\exec-5b6e4083-5e66-49cd-94ef-c592ccd07cdf.png",
+    "columns": 8,
+    "rows": 4
+  },
+  {
+    "id": "varial_se",
+    "path": "C:\\Users\\Aluno\\.codex\\generated_images\\01a1b361-c479-7cd2-9b54-307a62a3c15c\\exec-234b4708-4e06-4e06-8e9e-6c0cc0d2a37f.png",
+    "columns": 6,
+    "rows": 2
+  },
+  {
+    "id": "varial_sw",
+    "path": "C:\\Users\\Aluno\\.codex\\generated_images\\01a1b361-c479-7cd2-9b54-307a62a3c15c\\exec-76095b3e-f88e-4068-a5e1-64f1371dd85b.png",
+    "columns": 6,
+    "rows": 2
+  },
+  {
+    "id": "varial_nw",
+    "path": "C:\\Users\\Aluno\\.codex\\generated_images\\01a1b361-c479-7cd2-9b54-307a62a3c15c\\exec-bbe7dec3-cc7b-41da-b1e1-4f02831258fd.png",
+    "columns": 6,
+    "rows": 2
+  },
+  {
+    "id": "varial_ne",
+    "path": "C:\\Users\\Aluno\\.codex\\generated_images\\01a1b361-c479-7cd2-9b54-307a62a3c15c\\exec-2e2acbeb-aad2-43b8-aa9f-d45bd4c29429.png",
+    "columns": 6,
+    "rows": 2
+  }
+]

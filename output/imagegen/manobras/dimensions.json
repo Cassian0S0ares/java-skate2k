@@ -1,0 +1,128 @@
+﻿[
+    {
+        "id":  "salto_pouso",
+        "width":  1536,
+        "height":  1024,
+        "columns":  8,
+        "rows":  4,
+        "alphaCorner":  0,
+        "alphaGap":  0
+    },
+    {
+        "id":  "kickflip_ciclo",
+        "width":  1536,
+        "height":  1024,
+        "columns":  8,
+        "rows":  4,
+        "alphaCorner":  1,
+        "alphaGap":  0
+    },
+    {
+        "id":  "impossible_ciclo",
+        "width":  1536,
+        "height":  1024,
+        "columns":  8,
+        "rows":  4,
+        "alphaCorner":  0,
+        "alphaGap":  0
+    },
+    {
+        "id":  "hardflip_ciclo",
+        "width":  1536,
+        "height":  1024,
+        "columns":  8,
+        "rows":  4,
+        "alphaCorner":  1,
+        "alphaGap":  0
+    },
+    {
+        "id":  "giro_8direcoes",
+        "width":  1254,
+        "height":  1254,
+        "columns":  4,
+        "rows":  2,
+        "alphaCorner":  0,
+        "alphaGap":  0
+    },
+    {
+        "id":  "grab",
+        "width":  1536,
+        "height":  1024,
+        "columns":  8,
+        "rows":  4,
+        "alphaCorner":  0,
+        "alphaGap":  0
+    },
+    {
+        "id":  "grind_5050",
+        "width":  1536,
+        "height":  1024,
+        "columns":  8,
+        "rows":  4,
+        "alphaCorner":  0,
+        "alphaGap":  0
+    },
+    {
+        "id":  "boardslide",
+        "width":  1536,
+        "height":  1024,
+        "columns":  8,
+        "rows":  4,
+        "alphaCorner":  1,
+        "alphaGap":  0
+    },
+    {
+        "id":  "gap_escada",
+        "width":  1536,
+        "height":  1024,
+        "columns":  8,
+        "rows":  4,
+        "alphaCorner":  0,
+        "alphaGap":  0
+    },
+    {
+        "id":  "voo_longo",
+        "width":  1536,
+        "height":  1024,
+        "columns":  8,
+        "rows":  4,
+        "alphaCorner":  0,
+        "alphaGap":  0
+    },
+    {
+        "id":  "varial_se",
+        "width":  1536,
+        "height":  1024,
+        "columns":  6,
+        "rows":  2,
+        "alphaCorner":  0,
+        "alphaGap":  0
+    },
+    {
+        "id":  "varial_sw",
+        "width":  1536,
+        "height":  1024,
+        "columns":  6,
+        "rows":  2,
+        "alphaCorner":  0,
+        "alphaGap":  0
+    },
+    {
+        "id":  "varial_nw",
+        "width":  1536,
+        "height":  1024,
+        "columns":  6,
+        "rows":  2,
+        "alphaCorner":  0,
+        "alphaGap":  0
+    },
+    {
+        "id":  "varial_ne",
+        "width":  1536,
+        "height":  1024,
+        "columns":  6,
+        "rows":  2,
+        "alphaCorner":  0,
+        "alphaGap":  0
+    }
+]

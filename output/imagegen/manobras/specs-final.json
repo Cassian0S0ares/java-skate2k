@@ -1,0 +1,158 @@
+{
+  "tool": "image_gen",
+  "reference": "core/assets/personagem_cartoon_skate_v2.png",
+  "common": "Use case: stylized-concept. Production animation sprite atlas for an isometric skate game. Supplied image is ONLY a character/style reference, NOT a layout to copy. Draw the SAME white spiky-haired character with yellow goggles/headphones, black face mask with white X, cream/yellow jacket, orange cargo pants, gloves, straps, cream chunky sneakers and dark backpack. Same confident smooth deep-purple outlines, clean flat cel shading and warm saturated palette. Board: dark grip top, yellow underside with dark X, silver trucks, cream wheels. Preserve recognizable proportions and accessories in all frames.\nOUTPUT: exactly 1536x1024 PNG with genuine transparent alpha background. Exactly EIGHT columns and FOUR rows, 32 separate sprites, one per equal 192x256 cell, NO other artwork. NO titles, words, arrows, labels, palette, portrait, big illustration, borders, gridlines, ground shadows, speed lines or scenery. No fifth row. Leave at least 12 transparent pixels between neighboring silhouettes. Each complete character and single board fits entirely inside its cell, same scale in every cell, character roughly 160px tall when upright. Consistent animation pivot: projected board center near local (96,205); do not shift character progressively across cells. Read frames LEFT TO RIGHT.\nFOUR ROW STARTING DIRECTIONS in SCREEN coordinates: row1 SE toward lower-right, chest/front visible; row2 SW toward lower-left, chest/front visible and mirror-facing to row1; row3 NW toward upper-left, BACKPACK visible and head facing LEFT; row4 NE toward upper-right, BACKPACK visible and head facing RIGHT. For non-body-spin actions, keep this direction throughout each row. For body spins, the row defines START direction and the character changes view around the turn as specified, including back views. Board perspective must rotate consistently with facing/travel, not all boards on same diagonal. Only one character and one board per cell, anatomically credible joints and weight.",
+  "sheets": [
+    {
+      "id": "salto_pouso",
+      "types": [],
+      "kind": "transition",
+      "fps": 12,
+      "detail": "COMMON TAKEOFF AND LANDING transition sequence, no flips and no body turn. Eight phases in every direction: 1 neutral rolling with both feet on grip tape; 2 deep preparatory crouch, arms winding; 3 pop tail and rise, front knee lifts; 4 ascending compact ollie with both shoes planted on leveled deck; 5 suspended tuck at apex with both shoes on deck; 6 extend legs to prepare landing, board level; 7 deep impact-absorbing crouch both feet supported; 8 recovered relaxed rolling stance. Strong readable silhouette changes. The board remains beneath both feet, shoes spaced over front and rear truck zones. Never hold board in hands. No ground or obstacle."
+    },
+    {
+      "id": "kickflip_ciclo",
+      "types": [
+        "KICKFLIP",
+        "DOUBLE_KICKFLIP",
+        "TRIPLE_KICKFLIP"
+      ],
+      "kind": "cycle",
+      "fps": 21.11111111111111,
+      "detail": "AIRBORNE KICKFLIP ROTATION LOOP, eight samples of ONE longitudinal roll, NOT eight separate jumps. Board rotates around its NOSE-TO-TAIL LONG AXIS under the tucked rider; body heading stays fixed. Column board roll angles: 0,45,90,135,180,225,270,315 degrees. Show top grip, edge-on narrow deck, yellow underside and wheels, then other edge and returning grip in that exact progression. NO nose-over-tail somersault. Both shoes lifted clearly ABOVE rotating deck with safe clearance throughout rotation, never touching inverted deck or clipping wheels. Knees tucked, front ankle flicks outward then recovers, arms balance, slight natural follow-through. All eight frames are suspended airborne at same anchor; do NOT include a landing, takeoff or extra deck. This cycle is repeated 1/2/3 times for single/double/triple kickflip."
+    },
+    {
+      "id": "impossible_ciclo",
+      "types": [
+        "IMPOSSIBLE",
+        "DOUBLE_IMPOSSIBLE"
+      ],
+      "kind": "cycle",
+      "fps": 16.88888888888889,
+      "detail": "AIRBORNE IMPOSSIBLE end-over-end rotation loop, eight samples of one 360-degree PITCH rotation around the board WIDTH axis, distinct from kickflip. Column board pitch angles 0,45,90,135,180,225,270,315 degrees. The nose visibly rises toward knees, board turns upright, yellow underside passes, nose goes downward, returns level. Rider back foot guides the scooping wrap, lifted knees clear the board, front foot lifted out of its orbit, realistic compact pose and arm balance. Body faces same heading throughout each row; no body yaw and no longitudinal deck roll. One board only, not duplicates or arc trails. Suspended aerial frames, no takeoff/landing. Loop repeats twice for double impossible."
+    },
+    {
+      "id": "hardflip_ciclo",
+      "types": [
+        "HARDFLIP"
+      ],
+      "kind": "cycle",
+      "fps": 18,
+      "detail": "AIRBORNE HARDFLIP combination as this game's implementation: simultaneously roll the board about its length and pitch it nose-over-tail about its width. Eight clear consecutive phases of one combined 360-degree roll plus 360-degree pitch: 0,45,90,135,180,225,270,315 degrees for both axes. Board becomes diagonal/upright between safely tucked separated knees, exposes yellow underside then grip; ONE board only. Character body heading fixed per row. Strong knee tuck and outward ankle flick, no board through body, no shoes attached to inverted grip. All frames airborne, no takeoff/landing, no yaw."
+    },
+    {
+      "id": "giro_8direcoes",
+      "types": [
+        "GIRO_180",
+        "GIRO_360",
+        "GIRO_540",
+        "GIRO_720"
+      ],
+      "kind": "turntable",
+      "fps": 13.777777777777779,
+      "columns": 4,
+      "rows": 2,
+      "width": 1024,
+      "height": 1024,
+      "detail": "Eight absolute screen views of one suspended spinning pose, ordered SE,S,SW,W,NW,N,NE,E. Playback order defines clockwise/counterclockwise and starting direction.",
+      "prompt": "Use case: stylized-concept. Create a game character ROTATION SPRITE ATLAS using supplied image only for character identity and smooth cartoon art style. Same white spiky hair, yellow goggles/headphones, black face mask white X, cream/yellow jacket, orange cargo trousers, gloves, cream shoes, dark backpack, dark grip/yellow underside skateboard.\nExactly EIGHT sprites on a 1024x1024 transparent PNG, FOUR equal columns and TWO equal rows, cells 256x512. NO text, labels, arrows, borders, grid, portrait or scenery. Each cell contains same airborne compact crouch, arms tucked close, BOTH shoes firmly on level grip-up board, board beneath body, no flip or pitch. Same pose rotated in world yaw by45 degrees between cells, camera fixed isometric from above. Uniform scale, character occupies about 210px height, centered horizontally with board near y=330 within each cell.\nThe task is to show ALL EIGHT DIFFERENT COMPASS VIEWS, including LEFT-facing views. Precise cell map:\nTOP ROW column1: SE, facing LOWER RIGHT, front three-quarter face/chest visible; board nose lower-right.\nTOP ROW column2: SOUTH, facing STRAIGHT TOWARD VIEWER/down the screen, symmetric front of face/chest, both eyes, no backpack in front; board nose toward bottom, foreshortened length vertical screen axis.\nTOP ROW column3: SW, facing LOWER LEFT, front three-quarter with nose pointing LEFT and white hair sweeping RIGHT; board nose lower-left. This must be opposite facing to top-left.\nTOP ROW column4: WEST, facing LEFT, left profile, nose points directly to LEFT edge; board length horizontal screen axis nose left.\nBOTTOM ROW column1: NW, facing UPPER LEFT, rear three-quarter, backpack visible, nose/goggle sliver on LEFT silhouette; board nose upper-left.\nBOTTOM ROW column2: NORTH, facing STRAIGHT AWAY/up screen, symmetric back of hair and backpack, NO eyes or face; board nose toward top.\nBOTTOM ROW column3: NE, facing UPPER RIGHT, rear three-quarter, backpack visible, nose/goggle sliver on RIGHT silhouette; board nose upper-right.\nBOTTOM ROW column4: EAST, facing RIGHT, right profile, nose points directly RIGHT edge; board length horizontal nose right.\nKeep genuine transparent alpha=0 in all empty areas, no translucent fog, no checkerboard pixels, no floor shadows. No duplicate views. Eight clearly distinct angles of precisely the same tucked skating pose. Do not show a walking/running pose."
+    },
+    {
+      "id": "grab",
+      "types": [
+        "GRAB"
+      ],
+      "kind": "hold",
+      "fps": 12,
+      "detail": "PEGA-PAO / GRAB aerial sequence. Eight phases: 1 airborne knees bent feet on level board; 2 knees pull board up as one arm reaches down; 3 hand visibly touches SIDE EDGE of deck between feet; 4 deep tuck holding edge firmly, other arm extended for balance; 5 held grab with slight lean; 6 held grab with counterbalance; 7 release hand and extend legs; 8 both feet firmly on level deck ready to land. BOTH shoes stay in contact with deck throughout, one glove actually grips deck rim in frames3-6, never grabs a wheel or a detached floating board. Distinguish aerial grab from idle board carrying: body in a deep crouch OVER deck, no feet on ground. Heading constant per row. No yaw/flip, no scenery."
+    },
+    {
+      "id": "grind_5050",
+      "types": [
+        "GRIND_5050"
+      ],
+      "kind": "balance",
+      "fps": 12,
+      "detail": "50-50 GRIND animation poses, exactly eight phases: 1 compact aligned approach; 2 settle with bent knees and board level; 3 balanced center, arms spread; 4 mild lean to rider left; 5 stronger left lean with arms counterbalancing; 6 mild right lean; 7 stronger right lean with arms counterbalancing; 8 small pop-out tuck. Deck length remains PARALLEL to travel direction and imaginary rail, both trucks aligned with travel, BOTH shoes on grip over front/rear truck positions. Board never rotates 90deg, never flips. Clear body lean variation with center of mass still over deck, arms stretched for balance. IMPORTANT draw ONLY character and board, NO physical rail, curb, ledge, sparks or background; actual game provides obstacles. Same 4 travel directions."
+    },
+    {
+      "id": "boardslide",
+      "types": [
+        "BOARDSLIDE"
+      ],
+      "kind": "balance",
+      "fps": 12,
+      "detail": "BOARDSLIDE animation, visibly distinct from 50-50. All poses use board turned exactly 90 DEGREES PERPENDICULAR to row travel direction/imaginary rail, deck center is the sliding contact, wheels clear on each side. Both feet planted wide on grip at opposite ends, knees bent, torso twisted to look along TRAVEL direction. Eight phases: 1 enter with board already perpendicular; 2 sink into slide; 3 arms spread neutral balanced center; 4 lean left; 5 stronger left with counterbalancing arms; 6 lean right; 7 stronger right; 8 small pop-out while board remains perpendicular (realign in common transition). Board 90deg relative to movement must be obvious in every cell: for SE/NW travel deck lies along NE/SW diagonal, for SW/NE travel deck lies along NW/SE diagonal. Draw only rider+board, NO rail, ledge, sparks, scenery. Do not confuse the travel-facing head with board's transverse axis."
+    },
+    {
+      "id": "gap_escada",
+      "types": [
+        "GAP_ESCADA"
+      ],
+      "kind": "oneshot",
+      "fps": 12,
+      "detail": "GAP DA ESCADA / stair gap jump eight chronological poses: 1 low preload crouch on board; 2 forceful tail pop/front knee lift; 3 rising compact ollie; 4 strongly tucked aerial pose with knees high and both shoes contacting deck; 5 airborne forward reach and arms open, board level; 6 descending with legs extending and board aligned; 7 deepest impact-absorbing crouch; 8 recovered rolling stance. Clear rise/tuck/extension/landing progression in silhouette. Both feet remain on the deck except natural brief tail-pop articulation, no flip or yaw. Same four headings; board points in travel direction. NO stairs or scenery baked into sprite; stage comes from game. No blur, speed lines or extra shadows."
+    },
+    {
+      "id": "voo_longo",
+      "types": [
+        "VOO_LONGO"
+      ],
+      "kind": "hold",
+      "fps": 10,
+      "detail": "VOO DA GALINHA / LONG AIRTIME pose sequence, eight stages: 1 airborne compact takeoff; 2 extend into suspended float; 3 broad arms-out balancing pose, knees bent and board level; 4 float pose mild left body correction; 5 float pose mild right correction; 6 steady centered float; 7 legs extend preparing descent; 8 compact landing-ready pose. Feet remain securely on deck throughout, board grip-up aligned with row heading, no body spin or flip, no hands holding board. Columns3-6 form a subtle reusable airtime hold loop; no re-jump within that loop. Express sustained floating via arm adjustments and flexed knees, not literal wings, feather props or motion lines. Only character+board, no environment."
+    },
+    {
+      "id": "varial_se",
+      "types": [
+        "VARIAL"
+      ],
+      "kind": "varial_direction",
+      "direction": "SE",
+      "columns": 6,
+      "rows": 2,
+      "fps": 12,
+      "prompt": "Use case: stylized-concept. Make a new VARIAL trick animation sheet of the SAME cartoon skater from the supplied reference. Reference is an accurate compass turnaround: top row SE,S,SW,W; bottom NW,N,NE,E. Use its exact character, accessories, palette, bold smooth outline, and use those views to match specified directions. White spiky hair, yellow goggles/headphones, black X mask, yellow/cream jacket, orange cargo pants, backpack, same yellow/black board.\nOUTPUT 1536x1024 transparent PNG, EXACTLY SIX COLUMNS and TWO ROWS =12 poses, equal cells256x512. Only these 12 sprites, no text, labels, border, scene, portraits, shadows or extras. Center each complete character plus one board within each cell, same scale; no cropping.\nThis entire sheet starts facing SE. TOP ROW is a 180 degree body turn CLOCKWISE, BOTTOM ROW counterclockwise. Each row ALSO rolls board through one full kickflip beneath lifted knees.\nFor EACH column obey this heading lookup exactly:\nTOP ROW headings LEFT TO RIGHT: SE, S, SW, W, NW, NW.\nBOTTOM ROW headings LEFT TO RIGHT: SE, E, NE, N, NW, NW.\nLOOKUP of actual visual appearance: SE=face/chest visible, looking lower RIGHT; S=straight front facing viewer, both eyes/chest; SW=face/chest visible, looking lower LEFT, hair trails RIGHT; W=left profile, nose LEFT; NW=backpack visible, looking upper LEFT, face hidden apart from left silhouette; N=straight back, symmetric backpack, NO face; NE=backpack visible, looking upper RIGHT; E=right profile, nose RIGHT. Copy these from reference. Both rows END with same opposite heading NW and must START at SE, never substitute a right-facing sprite for a left-facing one.\nColumn1 compact airborne pose, board grip UP and shoes on deck.\nColumn2 knees lifted, board longitudinal roll90deg, edge-on narrow plank under feet, body turned45deg from start.\nColumn3 knees tucked clear, board fully UPSIDE DOWN roll180deg, yellow underside and wheels UP, body turned90deg.\nColumn4 knees lifted, board opposite thin edge-on roll270deg, body turned135deg.\nColumn5 catch the level grip-UP board roll360deg with both shoes, body turned180deg, opposite starting view.\nColumn6 maintain SAME final heading, knees flex slightly to stabilize landing-ready.\nMake character turn in world with fixed camera; NO duplicate same-facing row. Body rotation direction differs between rows; skateboard and body yaw change together. Every view anatomically correct, feet clear when deck upside down, level board beneath center of mass when caught. No extra legs, boards or ghost poses. Genuine fully transparent alpha outside silhouettes, no fog.",
+      "detail": "Top row clockwise, bottom counterclockwise; heading steps={\"cw\":[\"SE\",\"S\",\"SW\",\"W\",\"NW\",\"NW\"],\"ccw\":[\"SE\",\"E\",\"NE\",\"N\",\"NW\",\"NW\"]}"
+    },
+    {
+      "id": "varial_sw",
+      "types": [
+        "VARIAL"
+      ],
+      "kind": "varial_direction",
+      "direction": "SW",
+      "columns": 6,
+      "rows": 2,
+      "fps": 12,
+      "prompt": "Use case: stylized-concept. Make a new VARIAL trick animation sheet of the SAME cartoon skater from the supplied reference. Reference is an accurate compass turnaround: top row SE,S,SW,W; bottom NW,N,NE,E. Use its exact character, accessories, palette, bold smooth outline, and use those views to match specified directions. White spiky hair, yellow goggles/headphones, black X mask, yellow/cream jacket, orange cargo pants, backpack, same yellow/black board.\nOUTPUT 1536x1024 transparent PNG, EXACTLY SIX COLUMNS and TWO ROWS =12 poses, equal cells256x512. Only these 12 sprites, no text, labels, border, scene, portraits, shadows or extras. Center each complete character plus one board within each cell, same scale; no cropping.\nThis entire sheet starts facing SW. TOP ROW is a 180 degree body turn CLOCKWISE, BOTTOM ROW counterclockwise. Each row ALSO rolls board through one full kickflip beneath lifted knees.\nFor EACH column obey this heading lookup exactly:\nTOP ROW headings LEFT TO RIGHT: SW, W, NW, N, NE, NE.\nBOTTOM ROW headings LEFT TO RIGHT: SW, S, SE, E, NE, NE.\nLOOKUP of actual visual appearance: SE=face/chest visible, looking lower RIGHT; S=straight front facing viewer, both eyes/chest; SW=face/chest visible, looking lower LEFT, hair trails RIGHT; W=left profile, nose LEFT; NW=backpack visible, looking upper LEFT, face hidden apart from left silhouette; N=straight back, symmetric backpack, NO face; NE=backpack visible, looking upper RIGHT; E=right profile, nose RIGHT. Copy these from reference. Both rows END with same opposite heading NE and must START at SW, never substitute a right-facing sprite for a left-facing one.\nColumn1 compact airborne pose, board grip UP and shoes on deck.\nColumn2 knees lifted, board longitudinal roll90deg, edge-on narrow plank under feet, body turned45deg from start.\nColumn3 knees tucked clear, board fully UPSIDE DOWN roll180deg, yellow underside and wheels UP, body turned90deg.\nColumn4 knees lifted, board opposite thin edge-on roll270deg, body turned135deg.\nColumn5 catch the level grip-UP board roll360deg with both shoes, body turned180deg, opposite starting view.\nColumn6 maintain SAME final heading, knees flex slightly to stabilize landing-ready.\nMake character turn in world with fixed camera; NO duplicate same-facing row. Body rotation direction differs between rows; skateboard and body yaw change together. Every view anatomically correct, feet clear when deck upside down, level board beneath center of mass when caught. No extra legs, boards or ghost poses. Genuine fully transparent alpha outside silhouettes, no fog.",
+      "detail": "Top row clockwise, bottom counterclockwise; heading steps={\"cw\":[\"SW\",\"W\",\"NW\",\"N\",\"NE\",\"NE\"],\"ccw\":[\"SW\",\"S\",\"SE\",\"E\",\"NE\",\"NE\"]}"
+    },
+    {
+      "id": "varial_nw",
+      "types": [
+        "VARIAL"
+      ],
+      "kind": "varial_direction",
+      "direction": "NW",
+      "columns": 6,
+      "rows": 2,
+      "fps": 12,
+      "prompt": "Use case: stylized-concept. Make a new VARIAL trick animation sheet of the SAME cartoon skater from the supplied reference. Reference is an accurate compass turnaround: top row SE,S,SW,W; bottom NW,N,NE,E. Use its exact character, accessories, palette, bold smooth outline, and use those views to match specified directions. White spiky hair, yellow goggles/headphones, black X mask, yellow/cream jacket, orange cargo pants, backpack, same yellow/black board.\nOUTPUT 1536x1024 transparent PNG, EXACTLY SIX COLUMNS and TWO ROWS =12 poses, equal cells256x512. Only these 12 sprites, no text, labels, border, scene, portraits, shadows or extras. Center each complete character plus one board within each cell, same scale; no cropping.\nThis entire sheet starts facing NW. TOP ROW is a 180 degree body turn CLOCKWISE, BOTTOM ROW counterclockwise. Each row ALSO rolls board through one full kickflip beneath lifted knees.\nFor EACH column obey this heading lookup exactly:\nTOP ROW headings LEFT TO RIGHT: NW, N, NE, E, SE, SE.\nBOTTOM ROW headings LEFT TO RIGHT: NW, W, SW, S, SE, SE.\nLOOKUP of actual visual appearance: SE=face/chest visible, looking lower RIGHT; S=straight front facing viewer, both eyes/chest; SW=face/chest visible, looking lower LEFT, hair trails RIGHT; W=left profile, nose LEFT; NW=backpack visible, looking upper LEFT, face hidden apart from left silhouette; N=straight back, symmetric backpack, NO face; NE=backpack visible, looking upper RIGHT; E=right profile, nose RIGHT. Copy these from reference. Both rows END with same opposite heading SE and must START at NW, never substitute a right-facing sprite for a left-facing one.\nColumn1 compact airborne pose, board grip UP and shoes on deck.\nColumn2 knees lifted, board longitudinal roll90deg, edge-on narrow plank under feet, body turned45deg from start.\nColumn3 knees tucked clear, board fully UPSIDE DOWN roll180deg, yellow underside and wheels UP, body turned90deg.\nColumn4 knees lifted, board opposite thin edge-on roll270deg, body turned135deg.\nColumn5 catch the level grip-UP board roll360deg with both shoes, body turned180deg, opposite starting view.\nColumn6 maintain SAME final heading, knees flex slightly to stabilize landing-ready.\nMake character turn in world with fixed camera; NO duplicate same-facing row. Body rotation direction differs between rows; skateboard and body yaw change together. Every view anatomically correct, feet clear when deck upside down, level board beneath center of mass when caught. No extra legs, boards or ghost poses. Genuine fully transparent alpha outside silhouettes, no fog.",
+      "detail": "Top row clockwise, bottom counterclockwise; heading steps={\"cw\":[\"NW\",\"N\",\"NE\",\"E\",\"SE\",\"SE\"],\"ccw\":[\"NW\",\"W\",\"SW\",\"S\",\"SE\",\"SE\"]}"
+    },
+    {
+      "id": "varial_ne",
+      "types": [
+        "VARIAL"
+      ],
+      "kind": "varial_direction",
+      "direction": "NE",
+      "columns": 6,
+      "rows": 2,
+      "fps": 12,
+      "prompt": "Use case: stylized-concept. Make a new VARIAL trick animation sheet of the SAME cartoon skater from the supplied reference. Reference is an accurate compass turnaround: top row SE,S,SW,W; bottom NW,N,NE,E. Use its exact character, accessories, palette, bold smooth outline, and use those views to match specified directions. White spiky hair, yellow goggles/headphones, black X mask, yellow/cream jacket, orange cargo pants, backpack, same yellow/black board.\nOUTPUT 1536x1024 transparent PNG, EXACTLY SIX COLUMNS and TWO ROWS =12 poses, equal cells256x512. Only these 12 sprites, no text, labels, border, scene, portraits, shadows or extras. Center each complete character plus one board within each cell, same scale; no cropping.\nThis entire sheet starts facing NE. TOP ROW is a 180 degree body turn CLOCKWISE, BOTTOM ROW counterclockwise. Each row ALSO rolls board through one full kickflip beneath lifted knees.\nFor EACH column obey this heading lookup exactly:\nTOP ROW headings LEFT TO RIGHT: NE, E, SE, S, SW, SW.\nBOTTOM ROW headings LEFT TO RIGHT: NE, N, NW, W, SW, SW.\nLOOKUP of actual visual appearance: SE=face/chest visible, looking lower RIGHT; S=straight front facing viewer, both eyes/chest; SW=face/chest visible, looking lower LEFT, hair trails RIGHT; W=left profile, nose LEFT; NW=backpack visible, looking upper LEFT, face hidden apart from left silhouette; N=straight back, symmetric backpack, NO face; NE=backpack visible, looking upper RIGHT; E=right profile, nose RIGHT. Copy these from reference. Both rows END with same opposite heading SW and must START at NE, never substitute a right-facing sprite for a left-facing one.\nColumn1 compact airborne pose, board grip UP and shoes on deck.\nColumn2 knees lifted, board longitudinal roll90deg, edge-on narrow plank under feet, body turned45deg from start.\nColumn3 knees tucked clear, board fully UPSIDE DOWN roll180deg, yellow underside and wheels UP, body turned90deg.\nColumn4 knees lifted, board opposite thin edge-on roll270deg, body turned135deg.\nColumn5 catch the level grip-UP board roll360deg with both shoes, body turned180deg, opposite starting view.\nColumn6 maintain SAME final heading, knees flex slightly to stabilize landing-ready.\nMake character turn in world with fixed camera; NO duplicate same-facing row. Body rotation direction differs between rows; skateboard and body yaw change together. Every view anatomically correct, feet clear when deck upside down, level board beneath center of mass when caught. No extra legs, boards or ghost poses. Genuine fully transparent alpha outside silhouettes, no fog.",
+      "detail": "Top row clockwise, bottom counterclockwise; heading steps={\"cw\":[\"NE\",\"E\",\"SE\",\"S\",\"SW\",\"SW\"],\"ccw\":[\"NE\",\"N\",\"NW\",\"W\",\"SW\",\"SW\"]}"
+    }
+  ]
+}
