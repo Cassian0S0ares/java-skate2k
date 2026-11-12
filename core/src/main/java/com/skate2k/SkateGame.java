@@ -72,7 +72,8 @@ public class SkateGame extends Game {
         boolean novoRecorde = pontuacao.salvarSeRecorde(recorde);
         Runnable fim = () -> trocar(new TelaGameOver(this, pontuacao, indiceFase, venceu, nocaute,
                 novoRecorde, recordeAnterior, meta));
-        if (venceu) trocar(new TelaCinematica(this, TelaCinematica.FINAL, "ending", fim));
+        // Zerou o jogo: depois do final, volta direto ao menu (o recorde já foi salvo acima).
+        if (venceu) trocar(new TelaCinematica(this, TelaCinematica.FINAL, "ending", this::irParaMenu));
         else fim.run();
     }
 
