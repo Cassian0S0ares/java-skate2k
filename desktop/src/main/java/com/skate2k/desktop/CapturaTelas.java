@@ -68,6 +68,8 @@ final class CapturaTelas extends SkateGame {
             passo("fase" + (f + 1) + "-b", 11f, () -> abrirFase(f, Restricao.CAMERA_EM_MOVIMENTO));
         }
         passo("chuva", 7f, () -> abrirFase(1, Restricao.CHUVA));
+        passo("queda", 0.5f, this::abrirQueda);
+        passo("sprites-movimento", 0.5f, () -> setScreen(new com.skate2k.render.PreviaMovimento(desenho)));
         passo("abertura", 0.8f, () -> {
             restricao = Restricao.sorteioOficial();
             setScreen(new TelaJogo(this, 0, new Pontuacao()));
@@ -83,6 +85,28 @@ final class CapturaTelas extends SkateGame {
         TelaJogo tela = new TelaJogo(this, indice, new Pontuacao());
         tela.ligarBot();
         setScreen(tela);
+    }
+
+    /** Cena estável para conferir a pose caída sem depender das colisões do bot. */
+    private void abrirQueda() {
+        var mundo = new com.skate2k.logica.MundoJogo(com.skate2k.logica.CatalogoFases.criar(0),
+                Restricao.SEM_PULO, new Pontuacao(), 42L);
+        var jogador = mundo.jogador();
+        jogador.rumo = -(float) Math.PI / 2f;
+        jogador.cair("CAPTURA DE QUEDA");
+        for (int i = 0; i < 24; i++) mundo.atualizar(1f / 60f, new com.skate2k.logica.Comandos());
+        var camera = new com.badlogic.gdx.graphics.OrthographicCamera(640, 360);
+        camera.position.set(com.skate2k.render.Projecao.sx(jogador.x, jogador.y),
+                com.skate2k.render.Projecao.sy(jogador.x, jogador.y, jogador.z) + 30f, 0);
+        camera.update();
+        var render = new com.skate2k.render.RenderizadorMundo(desenho, mundo);
+        var efeitos = new com.skate2k.render.Efeitos();
+        setScreen(new com.badlogic.gdx.ScreenAdapter() {
+            @Override public void render(float dt) {
+                render.limparTela();
+                render.desenhar(mundo, camera, efeitos, 0.5f, 0f);
+            }
+        });
     }
 
     private Pontuacao exemplo() {

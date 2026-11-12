@@ -26,6 +26,7 @@ public final class Audio implements Disposable {
     private final Map<Efeito, Sound> sons = new EnumMap<>(Efeito.class);
     private final Random aleatorio = new Random(7);
     private Music musica;
+    private String nomeMusica;
     private boolean mudo;
     private long idGrind = -1;
 
@@ -34,14 +35,35 @@ public final class Audio implements Disposable {
             for (Efeito e : Efeito.values()) {
                 sons.put(e, Gdx.audio.newSound(Gdx.files.absolute(wavTemporario(gerar(e)).getAbsolutePath())));
             }
-            musica = Gdx.audio.newMusic(Gdx.files.absolute(wavTemporario(gerarMusica()).getAbsolutePath()));
-            musica.setLooping(true);
-            musica.setVolume(0.32f);
-            musica.play();
         } catch (Exception | LinkageError erro) {
             // Sem dispositivo de áudio o jogo continua normalmente, em silêncio.
             Gdx.app.error("Audio", "Áudio indisponível: " + erro.getMessage());
         }
+    }
+
+    /** Troca a trilha (arquivo em musicas/, sem extensão); se já é a atual, não reinicia. */
+    public void tocarMusica(String nome) {
+        tocarMusica(nome, true);
+    }
+
+    /** Com repetir=false a trilha toca uma vez e termina em silêncio. */
+    public void tocarMusica(String nome, boolean repetir) {
+        if (nome.equals(nomeMusica)) return;
+        nomeMusica = nome;
+        try {
+            if (musica != null) { musica.stop(); musica.dispose(); musica = null; }
+            musica = Gdx.audio.newMusic(Gdx.files.internal("musicas/" + nome + ".mp3"));
+            musica.setLooping(repetir);
+            musica.setVolume(0.45f);
+            if (!mudo) musica.play();
+        } catch (Exception | LinkageError erro) {
+            Gdx.app.error("Audio", "Música indisponível (" + nome + "): " + erro.getMessage());
+        }
+    }
+
+    public void pararMusica() {
+        if (musica != null) { musica.stop(); musica.dispose(); musica = null; }
+        nomeMusica = null;
     }
 
     public void tocar(Efeito e) {
@@ -178,38 +200,6 @@ public final class Audio implements Disposable {
         for (int i = 0; i < s.length; i++) {
             int v = (i < a.length ? a[i] : 0) + (i < b.length ? b[i] / 2 : 0);
             s[i] = (short) Math.max(Short.MIN_VALUE, Math.min(Short.MAX_VALUE, v));
-        }
-        return s;
-    }
-
-    /** Laço curto de punk-rock de garagem: baixo, bateria e uma guitarrinha em onda quadrada. */
-    private short[] gerarMusica() {
-        float bpm = 168f;
-        float colcheia = 60f / bpm / 2f;
-        int passos = 64;
-        int nPasso = (int) (colcheia * TAXA);
-        float[] baixo = {82.41f, 82.41f, 82.41f, 98f, 110f, 110f, 123.47f, 110f};
-        float[] solo = {329.6f, 0, 392f, 0, 440f, 392f, 329.6f, 0, 293.7f, 0, 329.6f, 0, 392f, 440f, 493.9f, 0};
-        short[] s = new short[passos * nPasso];
-        float faseB = 0;
-        float faseS = 0;
-        for (int p = 0; p < passos; p++) {
-            float fBaixo = baixo[(p / 4) % baixo.length];
-            float fSolo = p >= 32 ? solo[p % solo.length] : 0f;
-            boolean bumbo = p % 8 == 0 || p % 8 == 3;
-            boolean caixa = p % 8 == 4;
-            for (int i = 0; i < nPasso; i++) {
-                float t = i / (float) nPasso;
-                float seg = i / (float) TAXA;
-                faseB += fBaixo / TAXA;
-                faseS += fSolo / TAXA;
-                float amostra = ((faseB % 1f) < 0.4f ? 0.33f : -0.33f) * (1f - t * 0.5f);
-                if (fSolo > 0) amostra += ((faseS % 1f) < 0.5f ? 0.12f : -0.12f) * (1f - t * 0.6f);
-                if (bumbo) amostra += (float) Math.sin(2 * Math.PI * (110f - 300f * seg) * seg) * 0.55f * (float) Math.exp(-seg * 22f);
-                if (caixa) amostra += (aleatorio.nextFloat() * 2f - 1f) * 0.35f * (float) Math.exp(-seg * 22f);
-                amostra += (aleatorio.nextFloat() * 2f - 1f) * 0.08f * (float) Math.exp(-seg * 90f);
-                s[p * nPasso + i] = amostra(amostra);
-            }
         }
         return s;
     }

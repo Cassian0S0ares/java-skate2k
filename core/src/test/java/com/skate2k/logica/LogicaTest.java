@@ -228,11 +228,28 @@ class LogicaTest {
         Pontuacao p = new Pontuacao();
         p.registrarManobras(List.of(Manobra.de(TipoManobra.KICKFLIP, 1f), Manobra.de(TipoManobra.KICKFLIP, 1f)), false);
         assertEquals(0, p.pontosTotal());
-        assertEquals(200, p.carga());
+        assertEquals(210, p.carga()); // 100 + 110 (2ª manobra da sequência vale +10%)
         int ganho = p.derrotarRobo(100);
-        assertEquals((100 + 200) * 2, ganho);
+        assertEquals((100 + 210) * 2, ganho);
         assertEquals(ganho, p.pontosTotal());
         assertEquals(0, p.carga());
+    }
+
+    @Test
+    void manobrasEmSequenciaValemCadaVezMaisEQuedaZera() {
+        Pontuacao p = new Pontuacao();
+        int anterior = 0;
+        for (int i = 0; i < 5; i++) {
+            int antes = p.carga();
+            p.registrarManobras(List.of(Manobra.de(TipoManobra.KICKFLIP, 1f)), false);
+            int ganho = p.carga() - antes;
+            assertTrue(ganho > anterior, "a manobra " + (i + 1) + " deve valer mais que a anterior");
+            anterior = ganho;
+        }
+        p.cair();
+        assertEquals(1f, p.bonusSequencia());
+        for (int i = 0; i < 100; i++) p.registrarManobras(List.of(Manobra.de(TipoManobra.KICKFLIP, 1f)), false);
+        assertEquals(3f, p.bonusSequencia());
     }
 
     @Test

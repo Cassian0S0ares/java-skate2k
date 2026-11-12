@@ -8,6 +8,7 @@ import com.skate2k.logica.RepositorioRecorde;
 import com.skate2k.logica.Restricao;
 import com.skate2k.persistencia.RecordePreferences;
 import com.skate2k.render.Desenho;
+import com.skate2k.telas.TelaCinematica;
 import com.skate2k.telas.TelaGameOver;
 import com.skate2k.telas.TelaJogo;
 import com.skate2k.telas.TelaMenu;
@@ -18,8 +19,8 @@ public class SkateGame extends Game {
     public Desenho desenho;
     public Audio audio;
     public RepositorioRecorde recorde;
-    /** Começa no sorteio oficial documentado no README; a tecla R no menu sorteia outra. */
-    public Restricao restricao = Restricao.sorteioOficial();
+    /** Começa sem regra; a tecla R no menu sorteia uma restrição. */
+    public Restricao restricao = Restricao.SEM_REGRA;
 
     @Override
     public void create() {
@@ -39,12 +40,26 @@ public class SkateGame extends Game {
         trocar(new TelaMenu(this));
     }
 
+    /** Novo jogo: cinemática de abertura e depois a fase 1. */
     public void novoJogo() {
+        trocar(new TelaCinematica(this, TelaCinematica.ABERTURA, "intro",
+                () -> trocar(new TelaJogo(this, 0, new Pontuacao()))));
+    }
+
+    /** Jogar de novo depois do fim de jogo: vai direto à fase 1, sem rever a abertura. */
+    public void reiniciar() {
         trocar(new TelaJogo(this, 0, new Pontuacao()));
     }
 
     public void proximaFase(int indiceAtual, Pontuacao pontuacao) {
-        trocar(new TelaJogo(this, indiceAtual + 1, pontuacao));
+        int proxima = indiceAtual + 1;
+        if (proxima == CatalogoFases.TOTAL - 1) {
+            // Antes do duelo final: o plano de contingência do CEO.
+            trocar(new TelaCinematica(this, TelaCinematica.PRE_FASE4, null,
+                    () -> trocar(new TelaJogo(this, proxima, pontuacao))));
+        } else {
+            trocar(new TelaJogo(this, proxima, pontuacao));
+        }
     }
 
     public void mostrarResultadoFase(int indice, Pontuacao pontuacao, int bonus, int meta) {
@@ -55,7 +70,10 @@ public class SkateGame extends Game {
     public void encerrar(Pontuacao pontuacao, int indiceFase, boolean venceu, boolean nocaute, int meta) {
         int recordeAnterior = recorde.carregar();
         boolean novoRecorde = pontuacao.salvarSeRecorde(recorde);
-        trocar(new TelaGameOver(this, pontuacao, indiceFase, venceu, nocaute, novoRecorde, recordeAnterior, meta));
+        Runnable fim = () -> trocar(new TelaGameOver(this, pontuacao, indiceFase, venceu, nocaute,
+                novoRecorde, recordeAnterior, meta));
+        if (venceu) trocar(new TelaCinematica(this, TelaCinematica.FINAL, "ending", fim));
+        else fim.run();
     }
 
     public boolean ultimaFase(int indice) {

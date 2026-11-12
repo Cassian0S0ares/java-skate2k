@@ -11,6 +11,8 @@ public final class ConstantesFisica {
     public static final float GRAVIDADE = 18f;
     public static final float FORCA_PULO = 6.4f;
     public static final float FORCA_PULO_MAX = 9.2f;
+    /** Saltinho que acompanha uma manobra feita no chão (kickflip/impossible sem pulo). */
+    public static final float FORCA_PULO_BAIXO = 5.0f;
     public static final float TEMPO_CARGA_PULO = 0.40f;
     public static final float BONUS_TENIS_MOLA = 1.3f;
     public static final float QUIQUE_PISAO = 8.2f;
@@ -22,8 +24,8 @@ public final class ConstantesFisica {
     public static final float VELOCIDADE_MAX = 6.6f;
     public static final float BONUS_VELOCIDADE_NIVEL = 0.28f;
     public static final float BONUS_VELOCIDADE_CAFE = 2.4f;
-    public static final float ACELERACAO = 10f;
-    public static final float ATRITO = 1.5f;
+    public static final float ACELERACAO = 15f;
+    public static final float ATRITO = 1.2f;
     public static final float FREIO = 15f;
     public static final float GIRO_CHAO_RAD = 6.0f;
     public static final float ADERENCIA = 11f;

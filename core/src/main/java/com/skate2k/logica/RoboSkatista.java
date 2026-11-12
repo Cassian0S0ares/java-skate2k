@@ -31,9 +31,11 @@ public final class RoboSkatista {
     private float dirInvestidaY;
     private float flashDano;
     private boolean movendo;
+    private final Charlietron chefe;
 
     public RoboSkatista(TipoRobo tipo, float x, float y, Random r) {
         this.tipo = tipo;
+        this.chefe = tipo == TipoRobo.CHARLIETRON ? new Charlietron() : null;
         this.x = x;
         this.y = y;
         this.vida = tipo.vida;
@@ -51,6 +53,11 @@ public final class RoboSkatista {
         esperaFala -= dt;
         flashDano = Math.max(0, flashDano - dt);
         movendo = false;
+        if (chefe != null) {
+            chefe.atualizar(dt, this, j, cen, eventos);
+            movendo = chefe.estado() == Charlietron.Estado.RODANDO;
+            return;
+        }
 
         float dx = j.x - x;
         float dy = j.y - y;
@@ -159,21 +166,36 @@ public final class RoboSkatista {
     /** Aplica o dano do pisão. Devolve true se o robô foi destruído. */
     public boolean receberPisao(int dano) {
         vida -= dano;
+        vida = Math.max(0, vida);
         flashDano = 0.3f;
         atordoar(TEMPO_ATORDOADO);
         esperaInvestida = Math.max(esperaInvestida, 2f);
+        if (chefe != null) chefe.derrubar(vida <= 0);
         return vida <= 0;
     }
 
     public void atordoarPorTrombada() {
         atordoar(0.8f);
+        if (chefe != null) chefe.derrubar(false);
     }
 
     public boolean perigoso() {
+        if (chefe != null) return vida > 0 && !chefe.noAr() && !chefe.vulneravel();
         return estado != Estado.ATORDOADO;
     }
 
-    public Estado estado() { return estado; }
+    public Charlietron chefe() { return chefe; }
+    public float z() { return chefe == null ? 0f : chefe.z(); }
+
+    public Estado estado() {
+        if (chefe == null) return estado;
+        switch (chefe.estado()) {
+            case PREPARO_MANOBRA: case PREPARO_PISAO: return Estado.PREPARO;
+            case PISAO: return Estado.INVESTIDA;
+            case CAIDO: case DERROTADO: case RECUPERANDO: return Estado.ATORDOADO;
+            default: return Estado.PERSEGUICAO;
+        }
+    }
     public float tempoEstado() { return tempoEstado; }
     public int vida() { return vida; }
     public boolean movendo() { return movendo; }

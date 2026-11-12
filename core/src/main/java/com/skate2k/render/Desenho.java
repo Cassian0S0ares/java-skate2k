@@ -3,17 +3,25 @@ package com.skate2k.render;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.utils.Disposable;
 
-/** Atalhos sobre o ShapeRenderer. Todo o visual do jogo é desenhado com formas, sem imagens. */
+/** Desenha formas e sprites na mesma ordem e gerencia as texturas compartilhadas. */
 public final class Desenho implements Disposable {
     private final ShapeRenderer sr = new ShapeRenderer(30000);
+    private SpriteBatch batch;
+    private FolhaRobos robos;
+    private FolhaPersonagem personagem;
+    private FolhaCharlietron charlietron;
+    private final Matrix4 projecaoAtual = new Matrix4();
 
     public void iniciar(Matrix4 projecao) {
         Gdx.gl.glEnable(GL20.GL_BLEND);
         Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+        projecaoAtual.set(projecao);
         sr.setProjectionMatrix(projecao);
         sr.begin(ShapeRenderer.ShapeType.Filled);
     }
@@ -76,8 +84,44 @@ public final class Desenho implements Disposable {
         contornoRet(x, y, w, h, 3, borda);
     }
 
+    /** Desenha uma imagem no meio de uma passada de formas, preservando a ordem de pintura. */
+    public void sprite(TextureRegion r, float x, float y, float w, float h) {
+        sprite(r, x, y, w, h, Color.WHITE);
+    }
+
+    FolhaPersonagem personagem() {
+        if (personagem == null) personagem = new FolhaPersonagem();
+        return personagem;
+    }
+
+    FolhaCharlietron charlietron() {
+        if (charlietron == null) charlietron = new FolhaCharlietron();
+        return charlietron;
+    }
+
+    FolhaRobos robos() {
+        if (robos == null) robos = new FolhaRobos();
+        return robos;
+    }
+
+    public void sprite(TextureRegion r, float x, float y, float w, float h, Color cor) {
+        if (batch == null) batch = new SpriteBatch();
+        sr.end();
+        batch.setProjectionMatrix(projecaoAtual);
+        batch.begin();
+        batch.setColor(cor);
+        batch.draw(r, x, y, w, h);
+        batch.setColor(Color.WHITE);
+        batch.end();
+        sr.begin(ShapeRenderer.ShapeType.Filled);
+    }
+
     @Override
     public void dispose() {
+        if (charlietron != null) charlietron.dispose();
+        if (personagem != null) personagem.dispose();
+        if (robos != null) robos.dispose();
+        if (batch != null) batch.dispose();
         sr.dispose();
     }
 }

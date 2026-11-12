@@ -4,6 +4,11 @@ Arte do personagem cartoon baseada em `../personagem_cartoon_skate_v2.png`, cria
 
 ## Conteúdo
 
+O renderizador usa os recortes de salto/pouso, kickflip, impossible, hardflip, grab,
+50-50 e boardslide conforme o estado do jogador. As rotações de flip selecionam oito poses
+por ciclo a partir dos ângulos da física. As demais folhas continuam disponíveis como arte;
+os giros do corpo usam atualmente as quatro direções da pose selecionada.
+
 | Arquivo | Uso |
 | --- | --- |
 | `salto_pouso.png` | Preparação, saída, voo, absorção do impacto e recuperação |

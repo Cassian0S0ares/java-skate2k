@@ -296,10 +296,10 @@ public final class CatalogoFases {
         c.enfeite(TipoEnfeite.BUEIRO, 16, 12, 0);
         c.enfeite(TipoEnfeite.RACHADURA, 9, 12, 0);
 
-        Fase f = new Fase(4, "VILA DO SÍNDICO", "PROIBIDO SKATE. E ROBÔ TAMBÉM.", Fase.Tema.SUBURBIO, c,
-                95f, 40000, 1.12f, 4.4f, 17f, 2.5f);
-        f.robos(TipoRobo.FAISCA, 3).robos(TipoRobo.TANQUE, 2).robos(TipoRobo.SINDICO, 1);
-        f.entradas(17, 23, 26, 13, 8, 12, 17, 13, 31, 14.8f, 10, 15);
+        Fase f = new Fase(4, "CHARLIETRON", "A ÚLTIMA BATALHA DE ESTILO", Fase.Tema.SUBURBIO, c,
+                150f, 1200, 1.12f, 4.4f, 17f, 10f);
+        f.robos(TipoRobo.CHARLIETRON, 1);
+        f.entradas(17, 16, 26, 13, 8, 12, 17, 13, 31, 14.8f, 10, 15);
         f.item(TipoItem.BOLO, 6.5f, 22);
         f.item(TipoItem.CAPACETE, 28, 3.5f);
         f.item(TipoItem.RELOGIO, 18, 22);

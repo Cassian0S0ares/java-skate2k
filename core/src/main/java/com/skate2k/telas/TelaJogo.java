@@ -39,13 +39,13 @@ public class TelaJogo extends TelaBase {
     private float encerramento;
     private boolean encerrando;
     private boolean pausado;
-    private float tempoFase;
     private int ultimoNumeroAbertura = -1;
     private BotDemo bot;
 
     public TelaJogo(SkateGame jogo, int indiceFase, Pontuacao pontuacao) {
         super(jogo);
         this.indiceFase = indiceFase;
+        jogo.audio.tocarMusica("fase" + Math.min(indiceFase + 1, 4));
         this.pontuacao = pontuacao;
         this.mundo = new MundoJogo(CatalogoFases.criar(indiceFase), jogo.restricao, pontuacao, System.nanoTime());
         this.render = new RenderizadorMundo(d, mundo);
@@ -81,6 +81,12 @@ public class TelaJogo extends TelaBase {
             jogo.audio.pararGrind();
         }
 
+        if (!pausado && !encerrando && (Gdx.input.isKeyJustPressed(Keys.NUM_7)
+                || Gdx.input.isKeyJustPressed(Keys.NUMPAD_7))) {
+            pularFase();
+            return;
+        }
+
         if (pausado) {
             if (Gdx.input.isKeyJustPressed(Keys.Q)) {
                 jogo.irParaMenu();
@@ -91,7 +97,6 @@ public class TelaJogo extends TelaBase {
         } else if (!encerrando) {
             lerComandos(dt);
             mundo.atualizar(dt, comandos);
-            tempoFase += dt;
             for (EventoJogo e : mundo.consumirEventos()) {
                 efeitos.processar(e);
                 jogo.audio.processar(e);
@@ -110,6 +115,16 @@ public class TelaJogo extends TelaBase {
         desenharTudo(dt);
     }
 
+    /** Atalho de teste: tecla 7 conclui a fase como vitória. */
+    private void pularFase() {
+        jogo.audio.pararGrind();
+        if (jogo.ultimaFase(indiceFase)) {
+            jogo.encerrar(pontuacao, indiceFase, true, false, mundo.meta());
+        } else {
+            jogo.mostrarResultadoFase(indiceFase, pontuacao, 0, mundo.meta());
+        }
+    }
+
     private void atualizarAbertura(float dt) {
         abertura -= dt;
         int numero = (int) Math.ceil(abertura);
@@ -123,13 +138,13 @@ public class TelaJogo extends TelaBase {
         encerrando = true;
         encerramento = TEMPO_ENCERRAMENTO;
         jogo.audio.pararGrind();
-        jogo.audio.tocar(mundo.metaBatida()
+        jogo.audio.tocar(mundo.metaBatida() && mundo.jogador().vivo()
                 ? com.skate2k.audio.Audio.Efeito.NIVEL : com.skate2k.audio.Audio.Efeito.QUEDA);
     }
 
     private void concluir() {
-        // Nocaute com a meta já batida só encerra a fase mais cedo: ela continua vencida.
-        if (!mundo.metaBatida()) {
+        // Nocaute é sempre derrota, mesmo com a meta já batida.
+        if (!mundo.jogador().vivo() || !mundo.metaBatida()) {
             jogo.encerrar(pontuacao, indiceFase, false, !mundo.jogador().vivo(), mundo.meta());
             return;
         }
@@ -178,12 +193,12 @@ public class TelaJogo extends TelaBase {
         if (mundo.restricao() == Restricao.CHUVA) render.desenharChuva(w, h, tempo);
         hud.desenharSetasRobos(mundo, cameraMundo, w, h);
         hud.desenhar(mundo, w, h, tempo, recorde, pausado ? 0f : dt);
-        if (indiceFase == 0) hud.desenharDicaInicial(w, tempoFase);
 
         if (efeitos.flash() > 0) d.ret(0, 0, w, h, Paleta.copia(efeitos.corFlash(), efeitos.flash()));
         if (abertura > 0) desenharAbertura(w, h);
         if (encerrando) desenharEncerramento(w, h);
         if (pausado) desenharPausa(w, h);
+        hud.desenharControles(w);
         d.terminar();
     }
 
@@ -191,7 +206,9 @@ public class TelaJogo extends TelaBase {
         d.ret(0, h / 2f - 110, w, 220, Paleta.copia(Paleta.TINTA, 0.75f));
         FontePixel.titulo(d, "FASE " + mundo.fase().numero + ": " + mundo.fase().nome, w / 2f, h / 2f + 40, 6f, Paleta.AMARELO, Paleta.ROSA);
         FontePixel.centro(d, mundo.fase().subtitulo, w / 2f, h / 2f + 5, 2.5f, Paleta.CIANO);
-        FontePixel.centro(d, "META: " + mundo.meta() + " PONTOS EM " + (int) mundo.fase().tempoLimite + "S", w / 2f, h / 2f - 28, 2.5f, Paleta.BRANCO);
+        String objetivo = mundo.batalhaFinal() ? "SUPERE O ESTILO E ZERE A VIDA DO BOSS"
+                : "META: " + mundo.meta() + " PONTOS EM " + (int) mundo.fase().tempoLimite + "S";
+        FontePixel.centro(d, objetivo, w / 2f, h / 2f - 28, 2.5f, Paleta.BRANCO);
         int numero = (int) Math.ceil(abertura);
         String t = numero >= 3 ? "PREPARA..." : numero == 2 ? "APONTA..." : "VAI!";
         FontePixel.centro(d, t, w / 2f, h / 2f - 80, 5f, Paleta.LIMA);
@@ -201,11 +218,18 @@ public class TelaJogo extends TelaBase {
         d.ret(0, h / 2f - 70, w, 140, Paleta.copia(Paleta.TINTA, 0.75f));
         if (!mundo.jogador().vivo()) {
             FontePixel.titulo(d, "NOCAUTE!", w / 2f, h / 2f + 8, 8f, Paleta.VERMELHO, Paleta.AMARELO);
-            FontePixel.centro(d, mundo.metaBatida() ? "MAS A META JÁ ESTAVA BATIDA!" : "OS ROBÔS TE DESMONTARAM",
+            FontePixel.centro(d, "OS ROBÔS TE DESMONTARAM",
                     w / 2f, h / 2f - 45, 3f, Paleta.BRANCO);
             return;
         }
         boolean ok = mundo.metaBatida();
+        if (mundo.batalhaFinal()) {
+            FontePixel.titulo(d, ok ? "VOCÊ VENCEU!" : "FIM DO DUELO", w / 2f, h / 2f + 8,
+                    6f, ok ? Paleta.LIMA : Paleta.VERMELHO, Paleta.AMARELO);
+            FontePixel.centro(d, ok ? "CHARLIETRON SUPERADO NO ESTILO!" : "SUPERE O ESTILO E ZERE A VIDA DO BOSS",
+                    w / 2f, h / 2f - 45, 2.5f, Paleta.BRANCO);
+            return;
+        }
         FontePixel.titulo(d, "TEMPO!", w / 2f, h / 2f + 8, 8f, ok ? Paleta.LIMA : Paleta.VERMELHO, Paleta.AMARELO);
         FontePixel.centro(d, ok ? "META BATIDA!" : "FALTOU " + (mundo.meta() - pontuacao.pontosFase()) + " PONTOS",
                 w / 2f, h / 2f - 45, 3f, Paleta.BRANCO);

@@ -198,7 +198,7 @@ public final class RenderizadorMundo {
         entidades.clear();
         Jogador j = m.jogador();
         adicionar(j, j.x, j.y, j.z);
-        for (RoboSkatista r : m.robos()) adicionar(r, r.x, r.y, 0);
+        for (RoboSkatista r : m.robos()) adicionar(r, r.x, r.y, r.z());
         for (Item item : m.fase().itens) {
             if (item.disponivel()) adicionar(item, item.x, item.y, item.z);
         }

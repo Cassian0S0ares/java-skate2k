@@ -85,7 +85,7 @@ public final class Jogador {
         esperaNegacao = Math.max(0, esperaNegacao - dt);
 
         switch (estado) {
-            case NO_CHAO: atualizarChao(dt, c, cen, r); break;
+            case NO_CHAO: atualizarChao(dt, c, cen, r, cameraMovendo); break;
             case NO_AR: atualizarAr(dt, c, cen, r, cameraMovendo); break;
             case GRIND: atualizarGrind(dt, c, cen, r, cameraMovendo); break;
             default: atualizarCaido(dt, cen); break;
@@ -95,7 +95,7 @@ public final class Jogador {
 
     // ------------------------------------------------------------------------------------ chão
 
-    private void atualizarChao(float dt, Comandos c, Cenario cen, Restricao r) {
+    private void atualizarChao(float dt, Comandos c, Cenario cen, Restricao r, boolean cameraMovendo) {
         float velMax = velocidadeMaxima() * cen.pisoEm(x, y).fatorVelocidade;
         float vel = (float) Math.hypot(vx, vy);
 
@@ -171,6 +171,17 @@ public final class Jogador {
             cargaPulo = 0;
             iniciarVoo(forca, elementoChao);
             ouvinte.aoPular(this);
+            return;
+        }
+
+        // Manobra no chão: kickflip/impossible sem segurar o pulo dão um saltinho já com o flip.
+        boolean querFlip = c.kickflip || c.impossible;
+        if (querFlip && !carregandoPulo && !c.pulo && r.permiteManobraAerea()
+                && (!r.exigeCameraEmMovimento() || cameraMovendo)) {
+            iniciarVoo(FORCA_PULO_BAIXO + vzChao, elementoChao);
+            ouvinte.aoPular(this);
+            if (c.kickflip) detector.comandarKickflip();
+            if (c.impossible) detector.comandarImpossible();
         }
     }
 

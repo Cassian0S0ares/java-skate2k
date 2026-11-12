@@ -41,6 +41,25 @@ public final class RenderizadorHud {
         desenharRestricao(m, w, h, tempo);
         desenharItensAtivos(m, w, h);
         desenharManobras(m, w);
+        if (m.batalhaFinal()) desenharDuelo(m, w, h);
+    }
+
+    private void desenharDuelo(MundoJogo m, float w, float h) {
+        RoboSkatista chefe = m.chefeFinal();
+        float x = w / 2f - 220, y = h - 216;
+        d.painel(x, y, 440, 122, Paleta.PAINEL, Paleta.ROSA);
+        FontePixel.centro(d, "CHARLIETRON", w / 2f, y + 98, 2.5f, Paleta.ROSA);
+        FontePixel.texto(d, "VOCÊ " + m.estiloJogador(), x + 14, y + 72, 2f, Paleta.CIANO);
+        FontePixel.direita(d, "BOSS " + chefe.chefe().pontos(), x + 426, y + 72, 2f, Paleta.AMARELO);
+        d.ret(x + 14, y + 48, 412, 12, Paleta.TINTA);
+        d.ret(x + 16, y + 50, 408f * chefe.vida() / chefe.tipo.vida, 8, Paleta.ROSA);
+        FontePixel.centro(d, "VIDA " + chefe.vida() + "/" + chefe.tipo.vida + " - META DE ESTILO " + m.meta(),
+                w / 2f, y + 30, 1.5f, Paleta.BRANCO);
+        String aviso = chefe.chefe().estado() == com.skate2k.logica.Charlietron.Estado.PREPARO_PISAO
+                ? "SAIA DA MIRA! PISÃO CHEGANDO!" : chefe.chefe().vulneravel()
+                ? "CONTRA-ATAQUE: PULE NA CABEÇA!" : chefe.vida() <= 0
+                ? "COMPLETE A META DE ESTILO!" : "MANOBRE E ACERTE PISÕES NO BOSS";
+        FontePixel.centro(d, aviso, w / 2f, y + 10, 1.5f, Paleta.LIMA);
     }
 
     private void desenharTempo(MundoJogo m, float w, float h, float tempo) {
@@ -70,7 +89,7 @@ public final class RenderizadorHud {
         float bx = px + 12;
         float bw = pw - 24;
         d.ret(bx, py + 16, bw, 11, Paleta.TINTA);
-        float prog = Math.min(1f, p.pontosFase() / (float) m.meta());
+        float prog = Math.min(1f, (m.batalhaFinal() ? m.estiloJogador() : p.pontosFase()) / (float) m.meta());
         d.ret(bx + 2, py + 18, (bw - 4) * prog, 7, m.metaBatida() ? Paleta.LIMA : Paleta.AMARELO);
         FontePixel.comSombra(d, "TOTAL " + p.pontosTotal(), px + 12, py + 3, 1.5f, Paleta.BRANCO);
         FontePixel.direita(d, "RECORDE " + Math.max(recorde, p.pontosTotal()), px + pw - 12, py + 3, 1.5f, Paleta.CINZA);
@@ -150,6 +169,9 @@ public final class RenderizadorHud {
         FontePixel.comSombra(d, "REGRA: " + r.titulo, px + 12, py + 52, 2f, Paleta.LARANJA);
         String detalhe;
         switch (r) {
+            case DUELO:
+                detalhe = "PULO LIVRE - DESVIE DA MIRA";
+                break;
             case CHUVA:
                 detalhe = "PISTA MOLHADA, POUSO PRECISO";
                 break;
@@ -246,10 +268,9 @@ public final class RenderizadorHud {
         }
     }
 
-    public void desenharDicaInicial(float w, float tempoFase) {
-        if (tempoFase > 12f) return;
-        float a = Math.min(1f, (12f - tempoFase) * 2f);
-        d.ret(0, 96, w, 30, Paleta.copia(Paleta.TINTA, 0.55f * a));
-        FontePixel.centro(d, "WASD ANDA - ESPAÇO PULA - J/K FLIPS - L PEGA - Q/E GIRA - ESC PAUSA", w / 2f, 104, 2f, Paleta.copia(Paleta.BRANCO, a));
+    /** Controles sempre visíveis, acima da área de mensagens de manobras. */
+    public void desenharControles(float w) {
+        d.ret(0, 96, w, 30, Paleta.copia(Paleta.TINTA, 0.55f));
+        FontePixel.centro(d, "WASD ANDA - ESPAÇO PULA - J/K FLIPS - L PEGA - Q/E GIRA - ESC PAUSA", w / 2f, 104, 2f, Paleta.BRANCO);
     }
 }

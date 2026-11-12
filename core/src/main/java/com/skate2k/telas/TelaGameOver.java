@@ -35,6 +35,7 @@ public class TelaGameOver extends TelaBase {
         this.pontuacao = pontuacao;
         this.indiceFase = indiceFase;
         this.venceu = venceu;
+        jogo.audio.tocarMusica(venceu ? "ending" : "resumo");
         this.novoRecorde = novoRecorde;
         this.recordeAnterior = recordeAnterior;
         this.meta = meta;
@@ -56,7 +57,7 @@ public class TelaGameOver extends TelaBase {
         tempo += Gdx.graphics.getDeltaTime();
         if (tempo > 0.4f) {
             if (Gdx.input.isKeyJustPressed(Keys.ENTER) || Gdx.input.isKeyJustPressed(Keys.SPACE)) {
-                jogo.novoJogo();
+                jogo.reiniciar();
                 return;
             }
             if (Gdx.input.isKeyJustPressed(Keys.ESCAPE)) {

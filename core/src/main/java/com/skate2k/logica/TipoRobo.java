@@ -8,7 +8,8 @@ public enum TipoRobo {
     ROLIMA("ROLIMÃ-3000", 1, 3.0f, 100, 0.42f, 1.15f, 1, 1),
     FAISCA("FAÍSCA", 2, 3.9f, 200, 0.42f, 1.25f, 1, 2),
     TANQUE("TANQUE DE GUERRA", 4, 2.8f, 400, 0.60f, 1.55f, 2, 2),
-    SINDICO("SÍNDICO-9000", 8, 3.3f, 1500, 0.80f, 2.0f, 2, 3);
+    SINDICO("SÍNDICO-9000", 8, 3.3f, 1500, 0.80f, 2.0f, 2, 3),
+    CHARLIETRON("CHARLIETRON", 12, 3.7f, 3000, 0.7f, 1.7f, 1, 2);
 
     public final String nome;
     public final int vida;

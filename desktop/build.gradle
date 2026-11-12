@@ -13,6 +13,9 @@ dependencies {
     implementation "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
 }
 
+// Os assets ficam em core/assets; entram no classpath para Gdx.files.internal achar.
+sourceSets.main.resources.srcDir rootProject.file('core/assets')
+
 run {
     workingDir = rootProject.projectDir
     // O GLFW no macOS exige a thread principal.

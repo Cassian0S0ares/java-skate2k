@@ -1,0 +1,4 @@
+HISTÓRICO REVERTIDO: esta edição foi aplicada à imagem errada e desfeita.
+A legenda de reconstrução pertence a 05-role-da-vitoria.png.
+Ferramenta: image_gen integrada. Edição anterior da legenda de 01-charlie-tron.png.
+Use case: text-localization. Change ONLY lettering inside the existing bottom caption panel of this image. Replace the existing two sentences with exactly these two Portuguese lines: "A cidade começou a se reerguer." and "Seu povo estava livre do domínio das corporações." Center both lines, cream pixel lettering, adjust font size to fit the longer second line comfortably within existing frame, keep excellent readability and correct accents. Preserve everything else unchanged: panel frame, entire illustration, robotic Charlie Tron, hero, skateboards, scene, palette, pixel style and canvas dimensions. No additional text or watermark.

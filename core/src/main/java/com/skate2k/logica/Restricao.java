@@ -7,12 +7,18 @@ import java.util.Random;
  * o resultado documentado no README é sempre o mesmo; no menu, a tecla R sorteia outra.
  */
 public enum Restricao {
+    SEM_REGRA("SEM REGRA", "Jogo livre, sem restrição. Aperte R no menu para sortear uma regra.",
+            1f, 1f, 1f, 1f),
     CHUVA("CHUVA NA PISTA", "A chuva reduz a aderência: o skate escorrega e o pouso exige mais precisão.",
             0.30f, 0.65f, 1.45f, 0.7f),
     CAMERA_EM_MOVIMENTO("SÓ VALE SE FILMAR", "Só dá para manobrar com a câmera em movimento. Câmera parada, ninguém viu!",
             1f, 1f, 1f, 1f),
     SEM_PULO("SEM PULO", "Sem ollie livre: só dá para pular perto de trilhos. No ar, só valem as manobras nos trilhos.",
-            1f, 1f, 1f, 0.6f);
+            1f, 1f, 1f, 0.6f),
+    DUELO("BATALHA DE ESTILO", "Supere o estilo do Charlietron e zere sua vida. Pule livremente e desvie da mira!",
+            1f, 1f, 1f, 1f);
+
+    private static final Restricao[] SORTEAVEIS = {CHUVA, CAMERA_EM_MOVIMENTO, SEM_PULO};
 
     /** Semente oficial do sorteio ("2k" do nome do jogo). */
     public static final long SEMENTE_OFICIAL = 2000L;
@@ -44,14 +50,16 @@ public enum Restricao {
     }
 
     public static Restricao sortear(Random aleatorio) {
-        Restricao[] todas = values();
+        Restricao[] todas = SORTEAVEIS;
         return todas[aleatorio.nextInt(todas.length)];
     }
 
     /** Sorteia uma restrição garantidamente diferente da atual. */
     public static Restricao sortearOutra(Restricao atual, Random aleatorio) {
-        Restricao[] todas = values();
-        int indice = (atual.ordinal() + 1 + aleatorio.nextInt(todas.length - 1)) % todas.length;
+        Restricao[] todas = SORTEAVEIS;
+        if (atual == DUELO || atual == SEM_REGRA) return sortear(aleatorio);
+        int posicao = java.util.Arrays.asList(todas).indexOf(atual);
+        int indice = (posicao + 1 + aleatorio.nextInt(todas.length - 1)) % todas.length;
         return todas[indice];
     }
 

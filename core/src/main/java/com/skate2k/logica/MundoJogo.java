@@ -27,10 +27,12 @@ public final class MundoJogo implements Jogador.Ouvinte {
     private float tempoExibicaoManobras;
     private boolean metaAvisada;
     private int ultimoTique = -1;
+    private RoboSkatista chefeFinal;
+    private int estiloJogador;
 
     public MundoJogo(Fase fase, Restricao restricao, Pontuacao pontuacao, long semente) {
         this.fase = fase;
-        this.restricao = restricao;
+        this.restricao = fase.robos.contains(TipoRobo.CHARLIETRON) ? Restricao.DUELO : restricao;
         this.pontuacao = pontuacao;
         this.aleatorio = new Random(semente);
         this.jogador = new Jogador(fase.inicioX, fase.inicioY, this, aleatorio);
@@ -39,13 +41,15 @@ public final class MundoJogo implements Jogador.Ouvinte {
         pontuacao.iniciarFase();
         for (int i = 0; i < fase.robos.size(); i++) {
             float[] p = fase.pontosDeEntrada.get(i % fase.pontosDeEntrada.size());
-            robos.add(new RoboSkatista(fase.robos.get(i), p[0], p[1], aleatorio));
+            RoboSkatista robo = new RoboSkatista(fase.robos.get(i), p[0], p[1], aleatorio);
+            robos.add(robo);
+            if (robo.chefe() != null) chefeFinal = robo;
         }
     }
 
     /** Avança a simulação. O delta time vem de fora (Gdx.graphics na TelaJogo, fixo nos testes). */
     public void atualizar(float dt, Comandos comandos) {
-        if (acabouTempo()) return;
+        if (acabouTempo() || (batalhaFinal() && metaBatida())) return;
         if (!jogador.vivo()) {
             // Nocaute: o relógio e os robôs param, só a queda termina de acontecer.
             jogador.atualizar(dt, comandos, fase.cenario, restricao, camera.emMovimento());
@@ -60,6 +64,7 @@ public final class MundoJogo implements Jogador.Ouvinte {
         camera.atualizar(dt, jogador, restricao);
 
         for (int i = 0; i < robos.size(); i++) {
+            if (chefeFinal != null) chefeFinal.chefe().informarEstilo(estiloJogador);
             robos.get(i).atualizar(dt, jogador, fase.cenario, fase.fatorVelocidadeRobo, fase.intervaloInvestida,
                     aleatorio, eventos);
         }
@@ -72,8 +77,18 @@ public final class MundoJogo implements Jogador.Ouvinte {
     private void resolverColisoesRobos(float dt) {
         for (int i = robos.size() - 1; i >= 0; i--) {
             RoboSkatista r = robos.get(i);
+            if (r.vida() <= 0) continue;
             float d = (float) Math.hypot(jogador.x - r.x, jogador.y - r.y);
-            float alturaRobo = r.tipo.altura;
+            float alturaRobo = r.z() + r.tipo.altura;
+
+            if (r.chefe() != null && r.chefe().acertaCabeca(jogador)
+                    && d < r.tipo.raio + 0.35f && !jogador.invulneravel()
+                    && jogador.estado() != Jogador.Estado.CAIDO) {
+                boolean capacete = jogador.temCapacete();
+                golpear(r, true);
+                r.chefe().acertouPisao(!capacete);
+                continue;
+            }
 
             if (jogador.noAr() && jogador.vz < 2f && d < ALCANCE_IMA_PISAO
                     && jogador.z > alturaRobo * 0.5f && jogador.z < alturaRobo + 2.5f) {
@@ -85,7 +100,8 @@ public final class MundoJogo implements Jogador.Ouvinte {
                 pisar(r, i);
             } else if (d < r.tipo.raio + RAIO_TOQUE_EXTRA && r.perigoso() && !jogador.invulneravel()
                     && jogador.estado() != Jogador.Estado.CAIDO && jogador.estado() != Jogador.Estado.GRIND
-                    && jogador.z < ALTURA_PASSA_POR_CIMA) {
+                    && jogador.z < r.z() + ALTURA_PASSA_POR_CIMA
+                    && jogador.z + 1.5f > r.z()) {
                 golpear(r, r.estado() == RoboSkatista.Estado.INVESTIDA);
             }
         }
@@ -105,7 +121,7 @@ public final class MundoJogo implements Jogador.Ouvinte {
         if (!jogador.vivo()) {
             jogador.cair("NOCAUTE!");
         } else if (investida) {
-            jogador.cair("ATROPELADO POR UMA TORRADEIRA!");
+            jogador.cair(r.chefe() != null ? "PISÃO DO CHARLIETRON!" : "ATROPELADO POR UMA TORRADEIRA!");
         } else {
             trombar(r);
         }
@@ -124,15 +140,18 @@ public final class MundoJogo implements Jogador.Ouvinte {
         List<Manobra> pendentes = jogador.quicarNoRobo();
         if (!pendentes.isEmpty()) registrarManobras(pendentes, false);
         boolean destruido = r.receberPisao(pontuacao.dano());
+        if (r.chefe() != null) estiloJogador += 200;
         if (destruido) {
             int carga = pontuacao.carga();
             int mult = pontuacao.multiplicador();
             int ganho = pontuacao.derrotarRobo(r.tipo.valor);
             emitir(EventoJogo.Tipo.ROBO_DERROTADO, r.x, r.y, r.tipo.altura,
                     "(" + r.tipo.valor + " + " + carga + ") X" + mult, ganho);
-            robos.remove(indice);
-            filaRenascer.add(r.tipo);
-            esperaRenascer.add(ESPERA_RENASCER);
+            if (r.chefe() == null) {
+                robos.remove(indice);
+                filaRenascer.add(r.tipo);
+                esperaRenascer.add(ESPERA_RENASCER);
+            }
             checarMeta();
         } else {
             emitir(EventoJogo.Tipo.ROBO_ATINGIDO, r.x, r.y, r.tipo.altura, "BLINDAGEM " + r.vida() + "/" + r.tipo.vida, 0);
@@ -204,6 +223,7 @@ public final class MundoJogo implements Jogador.Ouvinte {
 
     /** Meta desta fase já ajustada pelo peso da restrição sorteada. */
     public int meta() {
+        if (batalhaFinal()) return Math.max(fase.meta, chefeFinal.chefe().pontos() + 1);
         return Math.round(fase.meta * restricao.fatorMeta);
     }
 
@@ -214,11 +234,17 @@ public final class MundoJogo implements Jogador.Ouvinte {
         }
     }
 
+    private int ultimoGanho;
+
     private void registrarManobras(List<Manobra> manobras, boolean limpo) {
+        int cargaAntes = pontuacao.carga();
         boolean subiu = pontuacao.registrarManobras(manobras, limpo);
+        ultimoGanho = pontuacao.carga() - cargaAntes;
+        if (batalhaFinal()) estiloJogador += ultimoGanho;
         ultimasManobras.clear();
         ultimasManobras.addAll(manobras);
         tempoExibicaoManobras = 2.2f;
+        checarMeta();
         if (subiu) {
             emitir(EventoJogo.Tipo.SUBIU_NIVEL, jogador.x, jogador.y, jogador.z + 1.8f, pontuacao.nomeNivel(), pontuacao.nivel());
         }
@@ -242,9 +268,7 @@ public final class MundoJogo implements Jogador.Ouvinte {
             return;
         }
         registrarManobras(manobras, limpo);
-        int soma = 0;
-        for (Manobra m : manobras) soma += m.pontos;
-        if (limpo) soma = Math.round(soma * BONUS_POUSO_LIMPO);
+        int soma = ultimoGanho;
         emitir(limpo ? EventoJogo.Tipo.POUSO_LIMPO : EventoJogo.Tipo.POUSO, j.x, j.y, j.z,
                 limpo ? "POUSO LIMPO!" : null, soma);
     }
@@ -299,8 +323,13 @@ public final class MundoJogo implements Jogador.Ouvinte {
 
     public boolean acabouTempo() { return tempoRestante <= 0; }
     /** A fase acabou, por tempo ou por nocaute. */
-    public boolean terminou() { return acabouTempo() || !jogador.vivo(); }
-    public boolean metaBatida() { return pontuacao.pontosFase() >= meta(); }
+    public boolean terminou() { return acabouTempo() || !jogador.vivo() || (batalhaFinal() && metaBatida()); }
+    public boolean metaBatida() {
+        return batalhaFinal() ? chefeFinal.vida() <= 0 && estiloJogador >= meta() : pontuacao.pontosFase() >= meta();
+    }
+    public boolean batalhaFinal() { return chefeFinal != null; }
+    public RoboSkatista chefeFinal() { return chefeFinal; }
+    public int estiloJogador() { return estiloJogador; }
     public float tempoRestante() { return tempoRestante; }
     public Fase fase() { return fase; }
     public Restricao restricao() { return restricao; }

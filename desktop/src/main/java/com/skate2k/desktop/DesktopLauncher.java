@@ -10,7 +10,7 @@ public final class DesktopLauncher {
 
     public static void main(String[] args) {
         Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
-        config.setTitle("Rolê x Robôs");
+        config.setTitle("Punk Disco!");
         config.setWindowedMode(1280, 720);
         config.useVsync(true);
         config.setForegroundFPS(60);

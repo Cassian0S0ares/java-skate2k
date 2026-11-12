@@ -39,6 +39,7 @@ public class TelaMenu extends TelaBase {
 
     public TelaMenu(SkateGame jogo) {
         super(jogo);
+        jogo.audio.tocarMusica("menu");
         reiniciarDemo();
     }
 
@@ -135,7 +136,7 @@ public class TelaMenu extends TelaBase {
     private void desenharPrincipal(float w, float h) {
         float cx = w / 2f;
         float pulo = (float) Math.sin(tempo * 3f) * 5f;
-        FontePixel.titulo(d, "ROLÊ X ROBÔS", cx, h - 170 + pulo, 13f, Paleta.AMARELO, Paleta.ROSA);
+        FontePixel.titulo(d, "PUNK DISCO!", cx, h - 170 + pulo, 13f, Paleta.AMARELO, Paleta.ROSA);
         FontePixel.centro(d, "SKATE, PANCADA EM ROBÔ E ZERO RESPONSABILIDADE", cx, h - 208, 2.5f, Paleta.CIANO);
 
         float y = h - 300;

@@ -18,6 +18,7 @@ public class TelaResultadoFase extends TelaBase {
 
     public TelaResultadoFase(SkateGame jogo, int indice, Pontuacao pontuacao, int bonus, int meta) {
         super(jogo);
+        jogo.audio.tocarMusica("resumo", false);
         this.indice = indice;
         this.pontuacao = pontuacao;
         this.bonus = bonus;
@@ -40,7 +41,7 @@ public class TelaResultadoFase extends TelaBase {
         float h = alturaUi();
         TelaGameOver.fundoListrado(d, w, h, tempo, Paleta.ROXO);
         float cx = w / 2f;
-        FontePixel.titulo(d, "FASE CONCLUÍDA!", cx, h - 170, 9f, Paleta.LIMA, Paleta.CIANO);
+        tituloOndulante("FASE CONCLUÍDA!", cx, h - 170, 9f);
         float y = h - 260;
         y = linha("PONTOS NA FASE", String.valueOf(pontuacao.pontosFase()), cx, y, Paleta.BRANCO);
         y = linha("META", String.valueOf(meta), cx, y, Paleta.CINZA);
@@ -53,6 +54,20 @@ public class TelaResultadoFase extends TelaBase {
             FontePixel.centro(d, "ENTER PARA CONTINUAR", cx, 70, 3f, Paleta.BRANCO);
         }
         d.terminar();
+    }
+
+    /** Cada letra balança em onda e o título pulsa de leve. */
+    private void tituloOndulante(String texto, float cx, float y, float escala) {
+        float celula = FontePixel.largura("AA", 1f) - FontePixel.largura("A", 1f);
+        float larguraLetra = FontePixel.largura("A", escala);
+        float inicio = cx - FontePixel.largura(texto, escala) / 2f;
+        for (int i = 0; i < texto.length(); i++) {
+            float onda = (float) Math.sin(tempo * 4f - i * 0.5f);
+            float escalaLetra = escala * (1f + 0.04f * onda);
+            float centro = inicio + i * celula * escala + larguraLetra / 2f;
+            FontePixel.titulo(d, String.valueOf(texto.charAt(i)), centro, y + onda * 10f, escalaLetra,
+                    Paleta.LIMA, Paleta.CIANO);
+        }
     }
 
     private float linha(String rotulo, String valor, float cx, float y, com.badlogic.gdx.graphics.Color cor) {

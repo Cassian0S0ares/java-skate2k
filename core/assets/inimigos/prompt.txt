@@ -1,0 +1,8 @@
+Use case: stylized-concept. Asset type: production transparent spritesheet for an isometric skateboarding game.
+Create exactly 16 sprites in a strict evenly spaced 4-column by 4-row square grid. Transparent background, no text, no labels, no grid lines, no shadows on ground, no extra decoration. Each cell contains one complete robot riding a skateboard including all wheels and antenna, centered horizontally with bottom of wheels at 90% of cell height. Leave 10% clear padding in each cell. All sprites same camera elevated isometric 3/4, hand-drawn polished cartoon, thick dark purple outlines, bold flat cel shading, playful chunky proportions, highly legible small game sprites.
+Rows define four distinct enemies:
+row 1: ROLIMA, small orange tin robot, rectangular head with black face display and lime glowing eyes, cyan chest light, short metal limbs, orange wheels, antenna.
+row 2: FAISCA, sleek cyan blue fast robot, black face display lime eyes, electric yellow accents, short antenna, narrow skateboard orange wheels.
+row 3: TANQUE, heavy purple armored robot with broad yellow shoulder plates, bulky torso, black face display lime eyes, wide skateboard orange wheels, antenna.
+row 4: SINDICO, gray blue boss robot, stern black screen face lime eyes, red necktie and white clipboard held in one hand, antenna, skateboard orange wheels.
+Columns define orientation consistently for EVERY row: column 1 faces screen down-right (SE), column 2 faces screen down-left (SW), column 3 faces screen up-left (NW, show BACK of head/body), column 4 faces screen up-right (NE, show BACK of head/body). Skateboards point in the facing direction. Same robot identity across its row. No human characters. All 16 isolated on actual transparent alpha. Square output.

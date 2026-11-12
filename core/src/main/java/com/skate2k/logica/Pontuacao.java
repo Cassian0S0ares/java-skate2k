@@ -16,6 +16,9 @@ public final class Pontuacao {
         "ZÉ NINGUÉM", "MANOBREIRO", "ESTILOSO", "BRABO", "LENDA DO BAIRRO"
     };
 
+    private static final float BONUS_POR_MANOBRA_SEQUENCIA = 0.10f;
+    private static final float BONUS_SEQUENCIA_MAXIMO = 3f;
+
     private int pontosTotal;
     private int pontosFase;
     private int carga;
@@ -37,13 +40,18 @@ public final class Pontuacao {
         int nivelAntes = nivel;
         float fator = limpo ? BONUS_POUSO_LIMPO : 1f;
         for (Manobra m : manobras) {
-            carga += Math.round(m.pontos * fator);
+            carga += Math.round(m.pontos * fator * bonusSequencia());
             manobrasConsecutivas++;
             xp += m.dificuldade * XP_POR_DIFICULDADE;
         }
         atualizarNivel();
         atualizarMelhorMultiplicador();
         return nivel > nivelAntes;
+    }
+
+    /** Cada manobra seguida sem cair vale mais: +10% por manobra na sequência, até 3x. */
+    public float bonusSequencia() {
+        return Math.min(BONUS_SEQUENCIA_MAXIMO, 1f + BONUS_POR_MANOBRA_SEQUENCIA * manobrasConsecutivas);
     }
 
     /** Usar um tipo novo de elemento no combo soma +1 ao multiplicador. */
